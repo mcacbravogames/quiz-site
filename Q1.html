@@ -2,14 +2,51 @@
 <html>
 <head>
   <title>Question 1</title>
+  <style>
+    body {
+      background: #0a0a23;
+      color: #00c4cc;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 2em;
+      text-align: center;
+    }
+    h2 {
+      color: #ffffff;
+      font-size: 1.8em;
+    }
+    form {
+      background-color: #1f1f3a;
+      padding: 20px;
+      border-radius: 10px;
+      display: inline-block;
+      text-align: left;
+      margin-top: 20px;
+    }
+    input[type="radio"] {
+      margin-right: 10px;
+    }
+    button {
+      background-color: #00c4cc;
+      color: #000;
+      padding: 10px 20px;
+      border: none;
+      font-size: 1em;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-top: 15px;
+    }
+    button:hover {
+      background-color: #00f5ff;
+    }
+  </style>
 </head>
 <body>
   <h2>What does YAHOO stand for?</h2>
   <form>
-    <input type="radio" name="answer" value="A"> A. You Are Hungry Octopus Oppa<br>
-    <input type="radio" name="answer" value="B"> B. Yet Another Heirarchical Officious Oracle<br>
-    <input type="radio" name="answer" value="C"> C. Yeah Android Humans Operations Office<br>
-    <input type="radio" name="answer" value="D"> D. Yup Angry Heretics On Opium<br><br>
+    <label><input type="radio" name="answer" value="A"> A. You Are Hungry Octopus Oppa</label><br>
+    <label><input type="radio" name="answer" value="B"> B. Yet Another Heirarchical Officious Oracle</label><br>
+    <label><input type="radio" name="answer" value="C"> C. Yeah Android Humans Operations Office</label><br>
+    <label><input type="radio" name="answer" value="D"> D. Yup Angry Heretics On Opium</label><br><br>
     <button type="button" onclick="checkAnswer()">Submit</button>
   </form>
 
