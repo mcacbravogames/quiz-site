@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Question 1</title>
+</head>
+<body>
+  <h2>What does YAHOO stand for?</h2>
+  <form>
+    <input type="radio" name="answer" value="A"> A. You Are Hungry Octopus Oppa<br>
+    <input type="radio" name="answer" value="B"> B. Yet Another Heirarchical Officious Oracle<br>
+    <input type="radio" name="answer" value="C"> C. Yeah Android Humans Operations Office<br>
+    <input type="radio" name="answer" value="D"> D. Yup Angry Heretics On Opium<br><br>
+    <button type="button" onclick="checkAnswer()">Submit</button>
+  </form>
+
+  <script>
+    const key = "q1-answered";
+    if (localStorage.getItem(key)) {
+      alert("You've already answered this question.");
+      window.location.href = "sorry.html";
+    }
+
+    function checkAnswer() {
+      const selected = document.querySelector('input[name="answer"]:checked');
+      if (!selected) {
+        alert("Please select an answer.");
+        return;
+      }
+      localStorage.setItem(key, "true");
+      if (selected.value === "B") {
+        window.location.href = "congrats1.html";
+      } else {
+        window.location.href = "sorry.html";
+      }
+    }
+  </script>
+</body>
+</html>
