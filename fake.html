@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>404 - Treasure Not Found</title>
+  <style>
+    body {
+      background-color: #0a0a23;
+      color: #ff4c4c;
+      font-family: 'Segoe UI', sans-serif;
+      text-align: center;
+      padding: 3em;
+    }
+    h1 {
+      font-size: 2em;
+      color: #ffffff;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 1.2em;
+      color: #ffaaaa;
+    }
+    .glitch {
+      color: #ff4c4c;
+      font-family: monospace;
+      text-shadow: 1px 0 red, -1px 0 cyan;
+      animation: flicker 1.2s infinite alternate;
+    }
+    @keyframes flicker {
+      0%   { opacity: 0.9; }
+      45%  { opacity: 0.4; }
+      100% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <h1 class="glitch">Error 404: Treasure Not Found</h1>
+  <p>You have found a fake QR!</p>
+  <p>This QR code is a decoy.</p>
+  <p>Keep hunting!</p>
+</body>
+</html>
