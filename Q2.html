@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Question 2</title>
+  <style>
+    body {
+      background: #0a0a23;
+      color: #00c4cc;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 2em;
+      text-align: center;
+    }
+    h2 {
+      color: #ffffff;
+      font-size: 1.8em;
+    }
+    form {
+      background-color: #1f1f3a;
+      padding: 20px;
+      border-radius: 10px;
+      display: inline-block;
+      text-align: left;
+      margin-top: 20px;
+    }
+    input[type="radio"] {
+      margin-right: 10px;
+    }
+    button {
+      background-color: #00c4cc;
+      color: #000;
+      padding: 10px 20px;
+      border: none;
+      font-size: 1em;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-top: 15px;
+    }
+    button:hover {
+      background-color: #00f5ff;
+    }
+  </style>
+</head>
+<body>
+  <h2>What does AI stand for?</h2>
+  <form>
+    <label><input type="radio" name="answer" value="A"> A. Automatic Input</label><br>
+    <label><input type="radio" name="answer" value="B"> B. Artificial Intelligence</label><br>
+    <label><input type="radio" name="answer" value="C"> C. Applied Innovation</label><br>
+    <label><input type="radio" name="answer" value="D"> D. Analog Interface</label><br><br>
+    <button type="button" onclick="checkAnswer()">Submit</button>
+  </form>
+
+  <script>
+    const key = "q1-answered";
+    if (localStorage.getItem(key)) {
+      alert("You've already answered this question.");
+      window.location.href = "answer.html";
+    }
+
+    function checkAnswer() {
+      const selected = document.querySelector('input[name="answer"]:checked');
+      if (!selected) {
+        alert("Please select an answer.");
+        return;
+      }
+      localStorage.setItem(key, "true");
+      if (selected.value === "B") {
+        window.location.href = "congrats2.html";
+      } else {
+        window.location.href = "sorry.html";
+      }
+    }
+  </script>
+</body>
+</html>
