@@ -3,16 +3,26 @@
 <head>
   <title>Wrong Answer</title>
   <style>
-    body {
+    html, body {
+      height: 100%;
+      margin: 0;
       background: #2a0000;
       color: #ff4d4d;
       font-family: 'Segoe UI', sans-serif;
-      padding: 2em;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
       text-align: center;
+      padding: 2em;
     }
     h1 {
       color: #ffffff;
       font-size: 2em;
+      margin-bottom: 15px;
     }
     p {
       font-size: 1.2em;
@@ -21,7 +31,9 @@
   </style>
 </head>
 <body>
-  <h1>Good Effort, please try again.</h1>
-  <p>Continue to hunt for more QR codes to win a prize!</p>
+  <div class="container">
+    <h1>Good Effort, please try again.</h1>
+    <p>Continue to hunt for more QR codes to win a prize!</p>
+  </div>
 </body>
 </html>
