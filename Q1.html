@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Question 7</title>
+  <title>Question 1</title>
   <style>
     html, body {
       height: 100%;
@@ -52,18 +52,18 @@
 </head>
 <body>
   <div class="container">
-    <h2>Which of these is a popular programming language for AI?</h2>
+    <h2>What does "AI" stand for?</h2>
     <form>
-      <label><input type="radio" name="answer" value="A"> A. Python</label><br>
-      <label><input type="radio" name="answer" value="B"> B. HTML</label><br>
-      <label><input type="radio" name="answer" value="C"> C. Excel</label><br>
-      <label><input type="radio" name="answer" value="D"> D. PHP</label><br><br>
+      <label><input type="radio" name="answer" value="A"> A. Automatic Input</label><br>
+      <label><input type="radio" name="answer" value="B"> B. Artificial Intelligence</label><br>
+      <label><input type="radio" name="answer" value="C"> C. Applied Innovation</label><br>
+      <label><input type="radio" name="answer" value="D"> D. Analog Interface</label><br><br>
       <button type="button" onclick="checkAnswer()">Submit</button>
     </form>
   </div>
 
   <script>
-    const key = "q7-answered";
+    const key = "q1-answered";
     if (localStorage.getItem(key)) {
       alert("You've already answered this question.");
       window.location.href = "already-answered.html";
@@ -76,8 +76,8 @@
         return;
       }
       localStorage.setItem(key, "true");
-      if (selected.value === "A") {
-        window.location.href = "congrats5.html";
+      if (selected.value === "B") {
+        window.location.href = "congrats.html?q=1";
       } else {
         window.location.href = "sorry.html";
       }

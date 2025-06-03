@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Congratulations</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: #0a0a23;
+      color: #00f5ff;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      text-align: center;
+      padding: 2em;
+    }
+    h1 {
+      color: #ffffff;
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 1.2em;
+      color: #aafaff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 id="title">Congrats!</h1>
+    <p>Please save a screenshot of this page and continue to hunt for more QR codes.</p>
+    <p><strong>Important note:</strong> If you have correctly answered a total of 9 different questions, with screenshots, please proceed to the table games area.</p>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const qNum = params.get("q");
+
+    const title = document.getElementById("title");
+    if (qNum) {
+      title.innerText = `Congrats on getting the right answer on Question ${qNum}!`;
+    } else {
+      title.innerText = "Congrats on getting the right answer!";
+    }
+  </script>
+</body>
+</html>
