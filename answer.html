@@ -3,10 +3,19 @@
 <head>
   <title>Already Answered</title>
   <style>
-    body {
+    html, body {
+      height: 100%;
+      margin: 0;
       background: #0a0a23;
       color: #ffcc00;
       font-family: 'Segoe UI', sans-serif;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
       text-align: center;
       padding: 2em;
     }
@@ -22,7 +31,9 @@
   </style>
 </head>
 <body>
-  <h1>You already answered this question.</h1>
-  <p>Please look for another QR code to scan and answer.</p>
+  <div class="container">
+    <h1>You already answered this question.</h1>
+    <p>Please look for another QR code to scan and answer.</p>
+  </div>
 </body>
 </html>
