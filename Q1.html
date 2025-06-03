@@ -1,26 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Question 1</title>
+  <title>Question 7</title>
   <style>
-    body {
+    html, body {
+      height: 100%;
+      margin: 0;
       background: #0a0a23;
       color: #00c4cc;
       font-family: 'Segoe UI', sans-serif;
-      padding: 2em;
+    }
+    .container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      height: 100%;
       text-align: center;
+      padding: 2em;
     }
     h2 {
       color: #ffffff;
       font-size: 1.8em;
+      margin-bottom: 20px;
     }
     form {
       background-color: #1f1f3a;
       padding: 20px;
       border-radius: 10px;
-      display: inline-block;
       text-align: left;
-      margin-top: 20px;
+      display: inline-block;
     }
     input[type="radio"] {
       margin-right: 10px;
@@ -34,6 +43,7 @@
       cursor: pointer;
       border-radius: 5px;
       margin-top: 15px;
+      width: 100%;
     }
     button:hover {
       background-color: #00f5ff;
@@ -41,20 +51,22 @@
   </style>
 </head>
 <body>
-  <h2>What does YAHOO stand for?</h2>
-  <form>
-    <label><input type="radio" name="answer" value="A"> A. You Are Hungry Octopus Oppa</label><br>
-    <label><input type="radio" name="answer" value="B"> B. Yet Another Heirarchical Officious Oracle</label><br>
-    <label><input type="radio" name="answer" value="C"> C. Yeah Android Humans Operations Office</label><br>
-    <label><input type="radio" name="answer" value="D"> D. Yup Angry Heretics On Opium</label><br><br>
-    <button type="button" onclick="checkAnswer()">Submit</button>
-  </form>
+  <div class="container">
+    <h2>Which of these is a popular programming language for AI?</h2>
+    <form>
+      <label><input type="radio" name="answer" value="A"> A. Python</label><br>
+      <label><input type="radio" name="answer" value="B"> B. HTML</label><br>
+      <label><input type="radio" name="answer" value="C"> C. Excel</label><br>
+      <label><input type="radio" name="answer" value="D"> D. PHP</label><br><br>
+      <button type="button" onclick="checkAnswer()">Submit</button>
+    </form>
+  </div>
 
   <script>
-    const key = "q1-answered";
+    const key = "q7-answered";
     if (localStorage.getItem(key)) {
       alert("You've already answered this question.");
-      window.location.href = "answer.html";
+      window.location.href = "already-answered.html";
     }
 
     function checkAnswer() {
@@ -64,8 +76,8 @@
         return;
       }
       localStorage.setItem(key, "true");
-      if (selected.value === "B") {
-        window.location.href = "Congrats1.html";
+      if (selected.value === "A") {
+        window.location.href = "congrats5.html";
       } else {
         window.location.href = "sorry.html";
       }
