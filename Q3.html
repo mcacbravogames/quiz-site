@@ -3,24 +3,33 @@
 <head>
   <title>Question 3</title>
   <style>
-    body {
+    html, body {
+      height: 100%;
+      margin: 0;
       background: #0a0a23;
       color: #00c4cc;
       font-family: 'Segoe UI', sans-serif;
-      padding: 2em;
+    }
+    .container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      height: 100%;
       text-align: center;
+      padding: 2em;
     }
     h2 {
       color: #ffffff;
       font-size: 1.8em;
+      margin-bottom: 20px;
     }
     form {
       background-color: #1f1f3a;
       padding: 20px;
       border-radius: 10px;
-      display: inline-block;
       text-align: left;
-      margin-top: 20px;
+      display: inline-block;
     }
     input[type="radio"] {
       margin-right: 10px;
@@ -34,6 +43,7 @@
       cursor: pointer;
       border-radius: 5px;
       margin-top: 15px;
+      width: 100%;
     }
     button:hover {
       background-color: #00f5ff;
@@ -41,20 +51,22 @@
   </style>
 </head>
 <body>
-  <h2>Which of the following is a virtual assistant powered by AI?</h2>
-  <form>
-    <label><input type="radio" name="answer" value="A"> A. Google Maps</label><br>
-    <label><input type="radio" name="answer" value="B"> B. Siri</label><br>
-    <label><input type="radio" name="answer" value="C"> C. Excel</label><br>
-    <label><input type="radio" name="answer" value="D"> D. Photoshop</label><br><br>
-    <button type="button" onclick="checkAnswer()">Submit</button>
-  </form>
+  <div class="container">
+    <h2>Which game did AI defeat the world champion in 1997?</h2>
+    <form>
+      <label><input type="radio" name="answer" value="A"> A. Poker</label><br>
+      <label><input type="radio" name="answer" value="B"> B. Go</label><br>
+      <label><input type="radio" name="answer" value="C"> C. Chess</label><br>
+      <label><input type="radio" name="answer" value="D"> D. Checkers</label><br><br>
+      <button type="button" onclick="checkAnswer()">Submit</button>
+    </form>
+  </div>
 
   <script>
     const key = "q3-answered";
     if (localStorage.getItem(key)) {
       alert("You've already answered this question.");
-      window.location.href = "answer.html";
+      window.location.href = "already-answered.html";
     }
 
     function checkAnswer() {
@@ -64,8 +76,8 @@
         return;
       }
       localStorage.setItem(key, "true");
-      if (selected.value === "B") {
-        window.location.href = "congrats3.html";
+      if (selected.value === "C") {
+        window.location.href = "congrats.html?q=3";
       } else {
         window.location.href = "sorry.html";
       }
