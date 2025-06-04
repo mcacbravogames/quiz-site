@@ -27,6 +27,12 @@
     p {
       font-size: 1.2em;
       color: #aafaff;
+      margin: 5px 0;
+    }
+    #summary {
+      margin-top: 20px;
+      font-size: 1em;
+      color: #87e0f2;
     }
   </style>
 </head>
@@ -35,6 +41,7 @@
     <h1 id="title">Congrats!</h1>
     <p>Please save a screenshot of this page and continue to hunt for more QR codes.</p>
     <p><strong>Important note:</strong> If you have correctly answered a total of 9 different questions, with screenshots, please proceed to the table games area.</p>
+    <p id="summary"></p>
   </div>
 
   <script>
@@ -46,6 +53,19 @@
       title.innerText = `Congrats on getting the right answer on Question ${qNum}!`;
     } else {
       title.innerText = "Congrats on getting the right answer!";
+    }
+
+    // Build a list of answered questions
+    let answered = [];
+    for (let i = 1; i <= 20; i++) {
+      if (localStorage.getItem(`q${i}-answered`) === "true") {
+        answered.push(i);
+      }
+    }
+
+    if (answered.length > 0) {
+      document.getElementById("summary").innerText =
+        "✅ You've already answered correctly on Question(s): " + answered.join(", ");
     }
   </script>
 </body>
