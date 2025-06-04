@@ -64,10 +64,21 @@
 
   <script>
     const key = "q1-answered";
-    if (localStorage.getItem(key)) {
-      alert("You've already answered this question.");
-      window.location.href = "already-answered.html";
+    const questionNumber = 1;
+
+    // Redirect if already answered
+    function checkIfAlreadyAnswered() {
+      if (localStorage.getItem(key)) {
+        window.location.href = "already-answered.html";
+      }
     }
+
+    window.onload = checkIfAlreadyAnswered;
+    window.addEventListener("pageshow", function(event) {
+      if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+        checkIfAlreadyAnswered();
+      }
+    });
 
     function checkAnswer() {
       const selected = document.querySelector('input[name="answer"]:checked');
@@ -75,9 +86,10 @@
         alert("Please select an answer.");
         return;
       }
-      localStorage.setItem(key, "true");
+
       if (selected.value === "B") {
-        window.location.href = "congrats.html?q=1";
+        localStorage.setItem(key, "true");
+        window.location.href = `congrats.html?q=${questionNumber}`;
       } else {
         window.location.href = "sorry.html";
       }
