@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Question 4</title>
+  <title>Question 17</title>
   <style>
     html, body {
       height: 100%;
@@ -52,20 +52,20 @@
 </head>
 <body>
   <div class="container">
-    <h2>Which company created ChatGPT?</h2>
+    <h2>What is the primary function of Citi Assist?</h2>
     <form>
-      <label><input type="radio" name="answer" value="A"> A. Microsoft</label><br>
-      <label><input type="radio" name="answer" value="B"> B. Google</label><br>
-      <label><input type="radio" name="answer" value="C"> C. OpenAI</label><br>
-      <label><input type="radio" name="answer" value="D"> D. Meta</label><br><br>
+      <label><input type="radio" name="answer" value="A"> A. Facilitating navigation though internal bank policies and procedures</label><br>
+      <label><input type="radio" name="answer" value="B"> B. Assisting customers with their banking needs</label><br>
+      <label><input type="radio" name="answer" value="C"> C. Managing employees attendance and payroll</label><br>
+      <label><input type="radio" name="answer" value="D"> D. Summarizing, comparing and searching multiple documents simultaneously</label><br><br>
       <button type="button" onclick="checkAnswer()">Submit</button>
     </form>
   </div>
 
   <script>
-    const answerKey = "q4-answered";
-    const lockKey = "q4-locked";
-    const questionNumber = 4;
+    const answerKey = "q17-answered";
+    const lockKey = "q17-locked";
+    const questionNumber = 17;
 
     function checkIfBlocked() {
       if (localStorage.getItem(answerKey) || localStorage.getItem(lockKey)) {
@@ -88,7 +88,7 @@
         return;
       }
 
-      if (selected.value === "C") {
+      if (selected.value === "A") {
         localStorage.setItem(answerKey, "true");
         window.location.href = `congrats.html?q=${questionNumber}`;
       } else {

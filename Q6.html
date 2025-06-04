@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Question 4</title>
+  <title>Question 6</title>
   <style>
     html, body {
       height: 100%;
@@ -52,20 +52,20 @@
 </head>
 <body>
   <div class="container">
-    <h2>Which company created ChatGPT?</h2>
+    <h2>Which of these is a popular programming language for AI?</h2>
     <form>
-      <label><input type="radio" name="answer" value="A"> A. Microsoft</label><br>
-      <label><input type="radio" name="answer" value="B"> B. Google</label><br>
-      <label><input type="radio" name="answer" value="C"> C. OpenAI</label><br>
-      <label><input type="radio" name="answer" value="D"> D. Meta</label><br><br>
+      <label><input type="radio" name="answer" value="A"> A. Python</label><br>
+      <label><input type="radio" name="answer" value="B"> B. HTML</label><br>
+      <label><input type="radio" name="answer" value="C"> C. Excel</label><br>
+      <label><input type="radio" name="answer" value="D"> D. PHP</label><br><br>
       <button type="button" onclick="checkAnswer()">Submit</button>
     </form>
   </div>
 
   <script>
-    const answerKey = "q4-answered";
-    const lockKey = "q4-locked";
-    const questionNumber = 4;
+    const answerKey = "q6-answered";
+    const lockKey = "q6-locked";
+    const questionNumber = 6;
 
     function checkIfBlocked() {
       if (localStorage.getItem(answerKey) || localStorage.getItem(lockKey)) {
@@ -88,7 +88,7 @@
         return;
       }
 
-      if (selected.value === "C") {
+      if (selected.value === "A") {
         localStorage.setItem(answerKey, "true");
         window.location.href = `congrats.html?q=${questionNumber}`;
       } else {

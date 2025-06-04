@@ -63,20 +63,21 @@
   </div>
 
   <script>
-    const key = "q2-answered";
+    const answerKey = "q2-answered";
+    const lockKey = "q2-locked";
     const questionNumber = 2;
 
-    // Redirect if already answered
-    function checkIfAlreadyAnswered() {
-      if (localStorage.getItem(key)) {
+    function checkIfBlocked() {
+      if (localStorage.getItem(answerKey) || localStorage.getItem(lockKey)) {
         window.location.href = "answer.html";
       }
     }
 
-    window.onload = checkIfAlreadyAnswered;
+    // Run on load and also if the page is loaded from cache (like after pressing back)
+    window.onload = checkIfBlocked;
     window.addEventListener("pageshow", function(event) {
       if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
-        checkIfAlreadyAnswered();
+        checkIfBlocked();
       }
     });
 
@@ -88,9 +89,10 @@
       }
 
       if (selected.value === "B") {
-        localStorage.setItem(key, "true");
+        localStorage.setItem(answerKey, "true");
         window.location.href = `congrats.html?q=${questionNumber}`;
       } else {
+        localStorage.setItem(lockKey, "true");
         window.location.href = "sorry.html";
       }
     }

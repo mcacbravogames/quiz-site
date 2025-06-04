@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Question 4</title>
+  <title>Question 15</title>
   <style>
     html, body {
       height: 100%;
@@ -52,20 +52,20 @@
 </head>
 <body>
   <div class="container">
-    <h2>Which company created ChatGPT?</h2>
+    <h2>Which of these is not an AI application?</h2>
     <form>
-      <label><input type="radio" name="answer" value="A"> A. Microsoft</label><br>
-      <label><input type="radio" name="answer" value="B"> B. Google</label><br>
-      <label><input type="radio" name="answer" value="C"> C. OpenAI</label><br>
-      <label><input type="radio" name="answer" value="D"> D. Meta</label><br><br>
+      <label><input type="radio" name="answer" value="A"> A. Spam filters</label><br>
+      <label><input type="radio" name="answer" value="B"> B. Voice assistants</label><br>
+      <label><input type="radio" name="answer" value="C"> C. Manual typewriters</label><br>
+      <label><input type="radio" name="answer" value="D"> D. Self-driving cars</label><br><br>
       <button type="button" onclick="checkAnswer()">Submit</button>
     </form>
   </div>
 
   <script>
-    const answerKey = "q4-answered";
-    const lockKey = "q4-locked";
-    const questionNumber = 4;
+    const answerKey = "q15-answered";
+    const lockKey = "q15-locked";
+    const questionNumber = 15;
 
     function checkIfBlocked() {
       if (localStorage.getItem(answerKey) || localStorage.getItem(lockKey)) {

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Question 4</title>
+  <title>Question 20</title>
   <style>
     html, body {
       height: 100%;
@@ -21,7 +21,11 @@
     }
     h2 {
       color: #ffffff;
-      font-size: 1.8em;
+      font-size: 1.6em;
+      margin-bottom: 20px;
+    }
+    p {
+      color: #b5f1ff;
       margin-bottom: 20px;
     }
     form {
@@ -52,20 +56,21 @@
 </head>
 <body>
   <div class="container">
-    <h2>Which company created ChatGPT?</h2>
+    <h2>Which tool should Paola use in this scenario?</h2>
+    <p>Paola wants to know how many sick leave credits she still has left for the year, but how can she get this quickly?</p>
     <form>
-      <label><input type="radio" name="answer" value="A"> A. Microsoft</label><br>
-      <label><input type="radio" name="answer" value="B"> B. Google</label><br>
-      <label><input type="radio" name="answer" value="C"> C. OpenAI</label><br>
-      <label><input type="radio" name="answer" value="D"> D. Meta</label><br><br>
+      <label><input type="radio" name="answer" value="A"> A. Ask Citi Assist</label><br>
+      <label><input type="radio" name="answer" value="B"> B. Ask Citi Squad</label><br>
+      <label><input type="radio" name="answer" value="C"> C. Ask Citi Stylus</label><br>
+      <label><input type="radio" name="answer" value="D"> D. Ask the manager</label><br><br>
       <button type="button" onclick="checkAnswer()">Submit</button>
     </form>
   </div>
 
   <script>
-    const answerKey = "q4-answered";
-    const lockKey = "q4-locked";
-    const questionNumber = 4;
+    const answerKey = "q20-answered";
+    const lockKey = "q20-locked";
+    const questionNumber = 20;
 
     function checkIfBlocked() {
       if (localStorage.getItem(answerKey) || localStorage.getItem(lockKey)) {
@@ -73,7 +78,6 @@
       }
     }
 
-    // Run on load and also if the page is loaded from cache (like after pressing back)
     window.onload = checkIfBlocked;
     window.addEventListener("pageshow", function(event) {
       if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
@@ -88,7 +92,7 @@
         return;
       }
 
-      if (selected.value === "C") {
+      if (selected.value === "A") {
         localStorage.setItem(answerKey, "true");
         window.location.href = `congrats.html?q=${questionNumber}`;
       } else {
