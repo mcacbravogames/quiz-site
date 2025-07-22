@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Citi HR Demand Tool - HR Admin Dashboard</title>
+  <style>
+    :root {
+      --citi-blue: #005aa7;
+      --citi-dark-blue: #003e6b;
+      --citi-light-blue: #0072ce;
+      --citi-gray: #f5f6fa;
+      --success-green: #28a745;
+      --warning-orange: #fd7e14;
+      --error-red: #dc3545;
+      --text-dark: #2c3e50;
+      --border-light: #e9ecef;
+      --purple: #6f42c1;
+      --teal: #20c997;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, var(--citi-gray) 0%, #e8f2ff 100%);
+      min-height: 100vh;
+      color: var(--text-dark);
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--citi-blue) 0%, var(--citi-dark-blue) 100%);
+      color: white;
+      padding: 20px 0;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 100%;
+      height: 200%;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(255,255,255,0.05) 10px,
+        rgba(255,255,255,0.05) 20px
+      );
+      animation: headerPattern 20s linear infinite;
+    }
+
+    @keyframes headerPattern {
+      0% { transform: translateX(-100px); }
+      100% { transform: translateX(100px); }
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: 300;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .dashboard-nav {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
+    .nav-tab {
+      padding: 15px 25px;
+      background: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--citi-blue);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-tab::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transition: left 0.5s;
+    }
+
+    .nav-tab:hover::before {
+      left: 100%;
+    }
+
+    .nav-tab.active {
+      background: var(--citi-blue);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .nav-tab:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--citi-blue), var(--citi-light-blue));
+    }
+
+    .stat-card.pending::before {
+      background: linear-gradient(90deg, var(--warning-orange), #ffb347);
+    }
+
+    .stat-card.approved::before {
+      background: linear-gradient(90deg, var(--success-green), #5cb85c);
+    }
+
+    .stat-card.rejected::before {
+      background: linear-gradient(90deg, var(--error-red), #e74c3c);
+    }
+
+    .stat-number {
+      font-size: 3rem;
+      font-weight: 300;
+      color: var(--citi-blue);
+      margin-bottom: 10px;
+    }
+
+    .stat-label {
+      color: var(--text-dark);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 14px;
+    }
+
+    .content-card {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 30px;
+    }
+
+    .content-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--citi-blue), var(--citi-light-blue), var(--citi-blue));
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+
+    .data-table th {
+      background: linear-gradient(135deg, var(--citi-dark-blue), var(--citi-blue));
+      color: white;
+      padding: 20px 15px;
+      text-align: left;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 13px;
+    }
+
+    .data-table td {
+      padding: 18px 15px;
+      border-bottom: 1px solid var(--border-light);
+      vertical-align: top;
+    }
+
+    .data-table tr:hover {
+      background: #f8f9ff;
+      cursor: pointer;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .status-pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .status-approved {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status-rejected {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .status-in-review {
+      background: #d1ecf1;
+      color: #0c5460;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 2px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--citi-blue), var(--citi-light-blue));
+      color: white;
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, var(--success-green), #5cb85c);
+      color: white;
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, var(--error-red), #e74c3c);
+      color: white;
+    }
+
+    .btn-warning {
+      background: linear-gradient(135deg, var(--warning-orange), #ffb347);
+      color: white;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 1000;
+      backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      max-width: 700px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal h3 {
+      color: var(--citi-blue);
+      margin-bottom: 25px;
+      font-size: 24px;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 20px;
+      right: 25px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: #999;
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 50%;
+      width: 35px;
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .close-modal:hover {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--text-dark);
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid var(--border-light);
+      border-radius: 8px;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      background: #fafbfc;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--citi-blue);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(0, 90, 167, 0.1);
+    }
+
+    .priority-filter, .status-filter, .date-filter {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .priority-filter select, .status-filter select, .date-filter input {
+      width: auto;
+      min-width: 150px;
+    }
+
+    .search-bar {
+      margin-bottom: 20px;
+    }
+
+    .search-bar input {
+      width: 100%;
+      max-width: 400px;
+      padding: 15px 20px;
+      border: 2px solid var(--border-light);
+      border-radius: 25px;
+      font-size: 16px;
+      background: white;
+      transition: all 0.3s ease;
+    }
+
+    .search-bar input:focus {
+      outline: none;
+      border-color: var(--citi-blue);
+      box-shadow: 0 0 0 3px rgba(0, 90, 167, 0.1);
+    }
+
+    .bulk-actions {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .request-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .detail-group {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 4px solid var(--citi-blue);
+    }
+
+    .detail-group h4 {
+      color: var(--citi-blue);
+      margin-bottom: 10px;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .detail-group p {
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid var(--citi-blue);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .message {
+      padding: 15px 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      font-weight: 500;
+    }
+
+    .message-success {
+      background: #d4edda;
+      color: #155724;
+      border-left: 4px solid var(--success-green);
+    }
+
+    .message-error {
+      background: #f8d7da;
+      color: #721c24;
+      border-left: 4px solid var(--error-red);
+    }
+
+    .message-warning {
+      background: #fff3cd;
+      color: #856404;
+      border-left: 4px solid var(--warning-orange);
+    }
+
+    .chart-container {
+      height: 300px;
+      margin: 20px 0;
+    }
+
+    .export-actions {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 15px;
+      }
+
+      .dashboard-nav {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .header h1 {
+        font-size: 2rem;
+      }
+
+      .data-table {
+        font-size: 12px;
+      }
+
+      .data-table th,
+      .data-table td {
+        padding: 12px 8px;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-content">
+      <h1>HR Demand Tool</h1>
+      <p>HR Admin Dashboard - Manage and Process FTE Requests</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number" id="totalRequestsAdmin">0</div>
+        <div class="stat-label">Total Requests</div>
+      </div>
+      <div class="stat-card pending">
+        <div class="stat-number" id="pendingRequestsAdmin">0</div>
+        <div class="stat-label">Pending Review</div>
+      </div>
+      <div class="stat-card approved">
+        <div class="stat-number" id="approvedRequestsAdmin">0</div>
+        <div class="stat-label">Approved</div>
+      </div>
+      <div class="stat-card rejected">
+        <div class="stat-number" id="rejectedRequestsAdmin">0</div>
+        <div class="stat-label">Rejected</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="totalFTEsAdmin">0</div>
+        <div class="stat-label">Total FTEs</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="avgProcessingTime">0</div>
+        <div class="stat-label">Avg Days</div>
+      </div>
+    </div>
+
+    <div class="dashboard-nav">
+      <button class="nav-tab active" data-tab="all-requests">All Requests</button>
+      <button class="nav-tab" data-tab="pending-review">Pending Review</button>
+      <button class="nav-tab" data-tab="approved">Approved</button>
+      <button class="nav-tab" data-tab="rejected">Rejected</button>
+      <button class="nav-tab" data-tab="analytics">Analytics</button>
+      <button class="nav-tab" data-tab="reports">Reports</button>
+    </div>
+
+    <div id="all-requests" class="tab-content active">
+      <div class="content-card">
+        <h2 style="color: var(--citi-blue); margin-bottom: 30px; font-size: 28px;">All FTE Requests</h2>
+        
+        <div class="search-bar">
+          <input type="text" id="searchInput" placeholder="Search by Request ID, Requester, Account, or Job Title..." />
+        </div>
+
+        <div class="priority-filter">
+          <label><strong>Filters:</strong></label>
+          <select id="priorityFilter">
+            <option value="">All Priorities</option>
+            <option value="Critical">Critical</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
+          
+          <select id="statusFilter">
+            <option value="">All Statuses</option>
+            <option value="Pending">Pending</option>
+            <option value="In Review">In Review</option>
+            <option value="Approved">Approved</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+
+          <input type="date" id="dateFromFilter" placeholder="From Date" />
+          <input type="date" id="dateToFilter" placeholder="To Date" />
+          
+          <button class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
+          <button class="btn" onclick="clearFilters()" style="background: #6c757d; color: white;">Clear</button>
+        </div>
+
+        <div class="bulk-actions">
+          <button class="btn btn-success" onclick="bulkApprove()">Bulk Approve</button>
+          <button class="btn btn-danger" onclick="bulkReject()">Bulk Reject</button>
+          <button class="btn btn-warning" onclick="bulkInReview()">Mark as In Review</button>
+        </div>
+
+        <div class="export-actions">
+          <button class="btn btn-primary" onclick="exportToExcel()">Export to Excel</button>
+          <button class="btn btn-primary" onclick="exportToPDF()">Export to PDF</button>
+        </div>
+
+        <table class="data-table" id="allRequestsTable">
+          <thead>
+            <tr>
+              <th><input type="checkbox" id="selectAll" onchange="toggleSelectAll()"></th>
+              <th>Request ID</th>
+              <th>Requester</th>
+              <th>Date Needed</th>
+              <th>FTEs</th>
+              <th>Account</th>
+              <th>Job Title</th>
+              <th>SMT</th>
+              <th>Priority</th>
+              <th>Status</th>
+              <th>Submit Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="pending-review" class="tab-content">
+      <div class="content-card">
+        <h2 style="color: var(--warning-orange); margin-bottom: 30px; font-size: 28px;">Requests Pending Review</h2>
+        
+        <div class="bulk-actions">
+          <button class="btn btn-success" onclick="bulkApproveFromPending()">Bulk Approve Selected</button>
+          <button class="btn btn-danger" onclick="bulkRejectFromPending()">Bulk Reject Selected</button>
+        </div>
+
+        <table class="data-table" id="pendingRequestsTable">
+          <thead>
+            <tr>
+              <th><input type="checkbox" id="selectAllPending" onchange="toggleSelectAllPending()"></th>
+              <th>Request ID</th>
+              <th>Requester</th>
+              <th>Date Needed</th>
+              <th>FTEs</th>
+              <th>Account</th>
+              <th>Priority</th>
+              <th>Days Pending</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="approved" class="tab-content">
+      <div class="content-card">
+        <h2 style="color: var(--success-green); margin-bottom: 30px; font-size: 28px;">Approved Requests</h2>
+        
+        <table class="data-table" id="approvedRequestsTable">
+          <thead>
+            <tr>
+              <th>Request ID</th>
+              <th>Requester</th>
+              <th>Date Needed</th>
+              <th>FTEs</th>
+              <th>Account</th>
+              <th>Job Title</th>
+              <th>PIDs Status</th>
+              <th>Approval Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="rejected" class="tab-content">
+      <div class="content-card">
+        <h2 style="color: var(--error-red); margin-bottom: 30px; font-size: 28px;">Rejected Requests</h2>
+        
+        <table class="data-table" id="rejectedRequestsTable">
+          <thead>
+            <tr>
+              <th>Request ID</th>
+              <th>Requester</th>
+              <th>Date Needed</th>
+              <th>FTEs</th>
+              <th>Account</th>
+              <th>Priority</th>
+              <th>Rejection Reason</th>
+              <th>Rejection Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="analytics" class="tab-content">
+      <div class="content-card">
+        <h2 style="color: var(--purple); margin-bottom: 30px; font-size: 28px;">Request Analytics</h2>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px;">
+          <div>
+            <h3 style="color: var(--citi-blue); margin-bottom: 15px;">Requests by Status</h3>
+            <div class="chart-container">
+              <canvas id="statusChart"></canvas>
+            </div>
+          </div>
+          
+          <div>
+            <h3 style="color: var(--citi-blue); margin-bottom: 15px;">Requests by Account</h3>
+            <div class="chart-container">
+              <canvas id="accountChart"></canvas>
+            </div>
+          </div>
+          
+          <div>
+            <h3 style="color: var(--citi-blue); margin-bottom: 15px;">Monthly Trends</h3>
+            <div class="chart-container">
+              <canvas id="trendChart"></canvas>
+            </div>
+          </div>
+          
+          <div>
+            <h3 style="color: var(--citi-blue); margin-bottom: 15px;">Priority Distribution</h3>
+            <div class="chart-container">
+              <canvas id="priorityChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="reports" class="tab-content">
+      <div class="content-card">
+        <h2 style="color: var(--teal); margin-bottom: 30px; font-size: 28px;">Generate Reports</h2>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+          <div class="detail-group">
+            <h4>Monthly Summary Report</h4>
+            <p>Comprehensive monthly summary with statistics, trends, and insights.</p>
+            <button class="btn btn-primary" onclick="generateMonthlyReport()">Generate</button>
+          </div>
+          
+          <div class="detail-group">
+            <h4>Department Analysis</h4>
+            <p>Detailed analysis by department/account with comparisons and metrics.</p>
+            <button class="btn btn-primary" onclick="generateDepartmentReport()">Generate</button>
+          </div>
+          
+          <div class="detail-group">
+            <h4>Processing Time Report</h4>
+            <p>Analysis of request processing times and efficiency metrics.</p>
+            <button class="btn btn-primary" onclick="generateProcessingReport()">Generate</button>
+          </div>
+          
+          <div class="detail-group">
+            <h4>Custom Report</h4>
+            <p>Create custom reports with specific date ranges and filters.</p>
+            <button class="btn btn-primary" onclick="openCustomReportModal()">Create Custom</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Request Details Modal -->
+  <div id="detailsModal" class="modal">
+    <div class="modal-content">
+      <button class="close-modal" onclick="closeDetailsModal()">&times;</button>
+      <h3>Request Details</h3>
+      <div id="requestDetailsContent"></div>
+    </div>
+  </div>
+
+  <!-- Action Modal -->
+  <div id="actionModal" class="modal">
+    <div class="modal-content">
+      <button class="close-modal" onclick="closeActionModal()">&times;</button>
+      <h3 id="actionModalTitle">Process Request</h3>
+      
+      <form id="actionForm">
+        <div class="form-group">
+          <label for="actionType">Action *</label>
+          <select id="actionType" required onchange="toggleReasonField()">
+            <option value="">-- Select Action --</option>
+            <option value="Approve">Approve</option>
+            <option value="Reject">Reject</option>
+            <option value="In Review">Mark as In Review</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="reasonGroup" style="display: none;">
+          <label for="actionReason">Reason/Comments</label>
+          <textarea id="actionReason" rows="3" placeholder="Please provide a reason for this action..."></textarea>
+        </div>
+
+        <div style="margin-top: 30px;">
+          <button type="submit" class="btn btn-primary">
+            Process Request
+            <span class="loading" id="actionLoading" style="display: none; margin-left: 10px;"></span>
+          </button>
+          <button type="button" class="btn" onclick="closeActionModal()" style="margin-left: 15px; background: #6c757d; color: white;">Cancel</button>
+        </div>
+      </form>
+      
+      <div id="actionMessage"></div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <script>
+    // === GLOBAL VARIABLES ===
+    let allRequests = [];
+    let filteredRequests = [];
+    let currentRequestId = null;
+    let charts = {};
+
+    // === MOCK DATA ===
+    const mockRequests = [
+      {
+        id: 'REQ-001', requester: 'John Smith', requesterSOEID: 'JSMITH01', dateNeeded: '2024-08-15', fteCount: 3, account: 'Consumer Banking', jobTitle: 'Senior Analyst', smt: 'Michael Johnson', smtSOEID: 'MJOHN01', intExt: 'Internal', priority: 'High', status: 'Pending', submitDate: '2024-07-01', rejectionReason: '', approvalDate: '', businessJustification: 'Need additional analysts for mortgage processing backlog', techSkills: 'SQL, Excel, Financial modeling', region: 'Americas',pidStatus: 'Not Started', managerApproval: 'Pending', budgetCode: 'CB-2024-001', replacementFor: '', location: 'New York', duration: 'Permanent'
+      },
+      {
+        id: 'REQ-002', requester: 'Sarah Davis', requesterSOEID: 'SDAVIS01', dateNeeded: '2024-09-01', fteCount: 2, account: 'Investment Banking', jobTitle: 'Vice President', smt: 'Robert Chen', smtSOEID: 'RCHEN01', intExt: 'External', priority: 'Critical', status: 'Approved', submitDate: '2024-06-15', rejectionReason: '', approvalDate: '2024-07-10', businessJustification: 'Critical hiring for new product launch', techSkills: 'Python, Machine Learning, Risk Management', region: 'EMEA',
+        pidStatus: 'In Progress', managerApproval: 'Approved', budgetCode: 'IB-2024-002', replacementFor: '', location: 'London', duration: 'Contract - 18 months'
+      },
+      {
+        id: 'REQ-003', requester: 'Mike Wilson', requesterSOEID: 'MWILSON01', dateNeeded: '2024-07-30', fteCount: 1, account: 'Global Markets', jobTitle: 'Trader', smt: 'Lisa Anderson', smtSOEID: 'LANDER01', intExt: 'External', priority: 'Medium', status: 'Rejected', submitDate: '2024-06-20', rejectionReason: 'Budget constraints for Q3', approvalDate: '', businessJustification: 'Replace departing trader', techSkills: 'Bloomberg Terminal, Fixed Income', region: 'Americas',
+        pidStatus: 'N/A', managerApproval: 'Approved', budgetCode: 'GM-2024-003', replacementFor: 'Jane Thompson', location: 'Singapore', duration: 'Permanent'
+      },
+      {
+        id: 'REQ-004', requester: 'Emily Brown', requesterSOEID: 'EBROWN01', dateNeeded: '2024-08-20', fteCount: 5, account: 'Technology', jobTitle: 'Software Engineer', smt: 'David Park', smtSOEID: 'DPARK01', intExt: 'Internal', priority: 'High', status: 'In Review', submitDate: '2024-07-05', rejectionReason: '', approvalDate: '', businessJustification: 'Platform modernization initiative', techSkills: 'Java, Spring Boot, Microservices', region: 'APAC',
+        pidStatus: 'Not Started', managerApproval: 'Approved', budgetCode: 'TECH-2024-004', replacementFor: '', location: 'Mumbai', duration: 'Permanent'
+      },
+      {
+        id: 'REQ-005', requester: 'James Taylor', requesterSOEID: 'JTAYLOR01', dateNeeded: '2024-09-15', fteCount: 2, account: 'Risk Management', jobTitle: 'Risk Analyst', smt: 'Anna Kim', smtSOEID: 'AKIM01', intExt: 'External', priority: 'Medium', status: 'Pending', submitDate: '2024-07-12', rejectionReason: '', approvalDate: '', businessJustification: 'Regulatory compliance requirements', techSkills: 'R, SAS, Risk modeling', region: 'Americas',
+        pidStatus: 'Not Started', managerApproval: 'Pending', budgetCode: 'RISK-2024-005', replacementFor: '', location: 'New York', duration: 'Contract - 12 months'
+      },
+      {
+        id: 'REQ-006', requester: 'Jennifer Lee', requesterSOEID: 'JLEE01', dateNeeded: '2024-08-10', fteCount: 4, account: 'Operations', jobTitle: 'Operations Specialist', smt: 'Tom Rodriguez', smtSOEID: 'TRODRI01', intExt: 'Internal', priority: 'Low', status: 'Approved', submitDate: '2024-06-25', rejectionReason: '', approvalDate: '2024-07-15', businessJustification: 'Process optimization project', techSkills: 'Process improvement, Six Sigma', region: 'Americas',
+        pidStatus: 'Completed', managerApproval: 'Approved', budgetCode: 'OPS-2024-006', replacementFor: '', location: 'Tampa', duration: 'Permanent'
+      },
+      {
+        id: 'REQ-007', requester: 'Alex Johnson', requesterSOEID: 'AJOHNS01', dateNeeded: '2024-09-30', fteCount: 1, account: 'Compliance', jobTitle: 'Compliance Officer', smt: 'Rachel Green', smtSOEID: 'RGREEN01', intExt: 'External', priority: 'High', status: 'Pending', submitDate: '2024-07-18', rejectionReason: '', approvalDate: '', businessJustification: 'Regulatory oversight expansion', techSkills: 'Regulatory knowledge, Audit experience', region: 'EMEA',
+        pidStatus: 'Not Started', managerApproval: 'Approved', budgetCode: 'COMP-2024-007', replacementFor: '', location: 'Frankfurt', duration: 'Permanent'
+      },
+      {
+        id: 'REQ-008', requester: 'Lisa Wang', requesterSOEID: 'LWANG01', dateNeeded: '2024-08-25', fteCount: 3, account: 'Human Resources', jobTitle: 'HR Business Partner', smt: 'Kevin Murphy', smtSOEID: 'KMURPH01', intExt: 'Internal', priority: 'Medium', status: 'Rejected', submitDate: '2024-07-02', rejectionReason: 'Headcount freeze in HR', approvalDate: '', businessJustification: 'Support business growth', techSkills: 'HRIS, Employee relations', region: 'APAC',
+        pidStatus: 'N/A', managerApproval: 'Approved', budgetCode: 'HR-2024-008', replacementFor: '', location: 'Hong Kong', duration: 'Permanent'
+      }
+    ];
+
+    // === INITIALIZATION ===
+    document.addEventListener('DOMContentLoaded', function() {
+      allRequests = [...mockRequests];
+      filteredRequests = [...allRequests];
+      
+      initializeDashboard();
+      setupEventListeners();
+      loadAllTabs();
+      initializeCharts();
+    });
+
+    function initializeDashboard() {
+      updateStatsCards();
+      renderAllRequestsTable();
+    }
+
+    function setupEventListeners() {
+      // Tab navigation
+      document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+          switchTab(this.dataset.tab);
+        });
+      });
+
+      // Search functionality
+      document.getElementById('searchInput').addEventListener('input', function() {
+        applyFilters();
+      });
+
+      // Form submissions
+      document.getElementById('actionForm').addEventListener('submit', processAction);
+    }
+
+    // === TAB MANAGEMENT ===
+    function switchTab(tabName) {
+      // Update active tab
+      document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+      // Show/hide content
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      document.getElementById(tabName).classList.add('active');
+
+      // Load tab-specific data
+      loadTabContent(tabName);
+    }
+
+    function loadTabContent(tabName) {
+      switch(tabName) {
+        case 'all-requests':
+          renderAllRequestsTable();
+          break;
+        case 'pending-review':
+          renderPendingRequestsTable();
+          break;
+        case 'approved':
+          renderApprovedRequestsTable();
+          break;
+        case 'rejected':
+          renderRejectedRequestsTable();
+          break;
+        case 'analytics':
+          updateCharts();
+          break;
+      }
+    }
+
+    function loadAllTabs() {
+      renderAllRequestsTable();
+      renderPendingRequestsTable();
+      renderApprovedRequestsTable();
+      renderRejectedRequestsTable();
+    }
+
+    // === STATS CARDS ===
+    function updateStatsCards() {
+      const pending = allRequests.filter(r => r.status === 'Pending' || r.status === 'In Review').length;
+      const approved = allRequests.filter(r => r.status === 'Approved').length;
+      const rejected = allRequests.filter(r => r.status === 'Rejected').length;
+      const totalFTEs = allRequests.reduce((sum, r) => sum + r.fteCount, 0);
+      const avgDays = Math.round(Math.random() * 15) + 5; // Mock calculation
+
+      document.getElementById('totalRequestsAdmin').textContent = allRequests.length;
+      document.getElementById('pendingRequestsAdmin').textContent = pending;
+      document.getElementById('approvedRequestsAdmin').textContent = approved;
+      document.getElementById('rejectedRequestsAdmin').textContent = rejected;
+      document.getElementById('totalFTEsAdmin').textContent = totalFTEs;
+      document.getElementById('avgProcessingTime').textContent = avgDays;
+
+      // Animate numbers
+      animateNumber('totalRequestsAdmin', allRequests.length);
+      animateNumber('pendingRequestsAdmin', pending);
+      animateNumber('approvedRequestsAdmin', approved);
+      animateNumber('rejectedRequestsAdmin', rejected);
+    }
+
+    function animateNumber(elementId, finalValue) {
+      const element = document.getElementById(elementId);
+      const duration = 1000;
+      const startValue = 0;
+      const increment = finalValue / (duration / 16);
+      let currentValue = startValue;
+
+      const timer = setInterval(() => {
+        currentValue += increment;
+        if (currentValue >= finalValue) {
+          currentValue = finalValue;
+          clearInterval(timer);
+        }
+        element.textContent = Math.floor(currentValue);
+      }, 16);
+    }
+
+    // === TABLE RENDERING ===
+    function renderAllRequestsTable() {
+      const tbody = document.querySelector('#allRequestsTable tbody');
+      tbody.innerHTML = '';
+
+      filteredRequests.forEach(request => {
+        const row = createRequestRow(request, true);
+        tbody.appendChild(row);
+      });
+    }
+
+    function renderPendingRequestsTable() {
+      const tbody = document.querySelector('#pendingRequestsTable tbody');
+      tbody.innerHTML = '';
+
+      const pendingRequests = allRequests.filter(r => r.status === 'Pending' || r.status === 'In Review');
+      pendingRequests.forEach(request => {
+        const row = createPendingRow(request);
+        tbody.appendChild(row);
+      });
+    }
+
+    function renderApprovedRequestsTable() {
+      const tbody = document.querySelector('#approvedRequestsTable tbody');
+      tbody.innerHTML = '';
+
+      const approvedRequests = allRequests.filter(r => r.status === 'Approved');
+      approvedRequests.forEach(request => {
+        const row = createApprovedRow(request);
+        tbody.appendChild(row);
+      });
+    }
+
+    function renderRejectedRequestsTable() {
+      const tbody = document.querySelector('#rejectedRequestsTable tbody');
+      tbody.innerHTML = '';
+
+      const rejectedRequests = allRequests.filter(r => r.status === 'Rejected');
+      rejectedRequests.forEach(request => {
+        const row = createRejectedRow(request);
+        tbody.appendChild(row);
+      });
+    }
+
+    function createRequestRow(request, includeCheckbox = false) {
+      const row = document.createElement('tr');
+      row.setAttribute('data-request-id', request.id);
+      
+      const daysPending = Math.floor((new Date() - new Date(request.submitDate)) / (1000 * 60 * 60 * 24));
+      
+      row.innerHTML = `
+        ${includeCheckbox ? `<td><input type="checkbox" class="request-checkbox" value="${request.id}"></td>` : ''}
+        <td><strong>${request.id}</strong></td>
+        <td>${request.requester}</td>
+        <td>${formatDate(request.dateNeeded)}</td>
+        <td><span style="font-weight: bold; color: var(--citi-blue);">${request.fteCount}</span></td>
+        <td>${request.account}</td>
+        <td>${request.jobTitle}</td>
+        <td>${request.smt}</td>
+        <td><span class="status-badge status-${request.priority.toLowerCase()}">${request.priority}</span></td>
+        <td><span class="status-badge status-${request.status.toLowerCase().replace(' ', '-')}">${request.status}</span></td>
+        <td>${formatDate(request.submitDate)}</td>
+        <td>
+          <button class="btn btn-primary" onclick="viewRequestDetails('${request.id}')">View</button>
+          ${request.status === 'Pending' || request.status === 'In Review' ? 
+            `<button class="btn btn-success" onclick="openActionModal('${request.id}', 'Approve')">Approve</button>
+             <button class="btn btn-danger" onclick="openActionModal('${request.id}', 'Reject')">Reject</button>` : 
+            `<button class="btn" style="background: #6c757d; color: white;" onclick="openActionModal('${request.id}', 'View')">Review</button>`
+          }
+        </td>
+      `;
+      
+      return row;
+    }
+
+    function createPendingRow(request) {
+      const row = document.createElement('tr');
+      const daysPending = Math.floor((new Date() - new Date(request.submitDate)) / (1000 * 60 * 60 * 24));
+      
+      row.innerHTML = `
+        <td><input type="checkbox" class="pending-checkbox" value="${request.id}"></td>
+        <td><strong>${request.id}</strong></td>
+        <td>${request.requester}</td>
+        <td>${formatDate(request.dateNeeded)}</td>
+        <td><span style="font-weight: bold; color: var(--citi-blue);">${request.fteCount}</span></td>
+        <td>${request.account}</td>
+        <td><span class="status-badge status-${request.priority.toLowerCase()}">${request.priority}</span></td>
+        <td><span style="color: ${daysPending > 7 ? 'var(--error-red)' : 'var(--text-dark)'}; font-weight: bold;">${daysPending} days</span></td>
+        <td>
+          <button class="btn btn-primary" onclick="viewRequestDetails('${request.id}')">View</button>
+          <button class="btn btn-success" onclick="openActionModal('${request.id}', 'Approve')">Approve</button>
+          <button class="btn btn-danger" onclick="openActionModal('${request.id}', 'Reject')">Reject</button>
+        </td>
+      `;
+      
+      return row;
+    }
+
+    function createApprovedRow(request) {
+      const row = document.createElement('tr');
+      
+      row.innerHTML = `
+        <td><strong>${request.id}</strong></td>
+        <td>${request.requester}</td>
+        <td>${formatDate(request.dateNeeded)}</td>
+        <td><span style="font-weight: bold; color: var(--success-green);">${request.fteCount}</span></td>
+        <td>${request.account}</td>
+        <td>${request.jobTitle}</td>
+        <td><span class="status-badge status-${request.pidStatus.toLowerCase().replace(' ', '-')}">${request.pidStatus}</span></td>
+        <td>${formatDate(request.approvalDate)}</td>
+        <td>
+          <button class="btn btn-primary" onclick="viewRequestDetails('${request.id}')">View</button>
+          <button class="btn" style="background: var(--teal); color: white;" onclick="trackPIDStatus('${request.id}')">Track PIDs</button>
+        </td>
+      `;
+      
+      return row;
+    }
+
+    function createRejectedRow(request) {
+      const row = document.createElement('tr');
+      
+      row.innerHTML = `
+        <td><strong>${request.id}</strong></td>
+        <td>${request.requester}</td>
+        <td>${formatDate(request.dateNeeded)}</td>
+        <td><span style="font-weight: bold; color: var(--error-red);">${request.fteCount}</span></td>
+        <td>${request.account}</td>
+        <td><span class="status-badge status-${request.priority.toLowerCase()}">${request.priority}</span></td>
+        <td>${request.rejectionReason || 'No reason provided'}</td>
+        <td>${formatDate(request.submitDate)}</td>
+        <td>
+          <button class="btn btn-primary" onclick="viewRequestDetails('${request.id}')">View</button>
+          <button class="btn btn-warning" onclick="openActionModal('${request.id}', 'Reconsider')">Reconsider</button>
+        </td>
+      `;
+      
+      return row;
+    }
+
+    // === FILTERING ===
+    function applyFilters() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const priorityFilter = document.getElementById('priorityFilter').value;
+      const statusFilter = document.getElementById('statusFilter').value;
+      const dateFrom = document.getElementById('dateFromFilter').value;
+      const dateTo = document.getElementById('dateToFilter').value;
+
+      filteredRequests = allRequests.filter(request => {
+        const matchesSearch = !searchTerm || 
+          request.id.toLowerCase().includes(searchTerm) ||
+          request.requester.toLowerCase().includes(searchTerm) ||
+          request.account.toLowerCase().includes(searchTerm) ||
+          request.jobTitle.toLowerCase().includes(searchTerm);
+
+        const matchesPriority = !priorityFilter || request.priority === priorityFilter;
+        const matchesStatus = !statusFilter || request.status === statusFilter;
+        
+        const matchesDateRange = (!dateFrom || new Date(request.submitDate) >= new Date(dateFrom)) &&
+                                 (!dateTo || new Date(request.submitDate) <= new Date(dateTo));
+
+        return matchesSearch && matchesPriority && matchesStatus && matchesDateRange;
+      });
+
+      renderAllRequestsTable();
+    }
+
+    function clearFilters() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('priorityFilter').value = '';
+      document.getElementById('statusFilter').value = '';
+      document.getElementById('dateFromFilter').value = '';
+      document.getElementById('dateToFilter').value = '';
+      
+      filteredRequests = [...allRequests];
+      renderAllRequestsTable();
+    }
+
+    // === BULK ACTIONS ===
+    function toggleSelectAll() {
+      const selectAll = document.getElementById('selectAll');
+      const checkboxes = document.querySelectorAll('.request-checkbox');
+      
+      checkboxes.forEach(checkbox => {
+        checkbox.checked = selectAll.checked;
+      });
+    }
+
+    function toggleSelectAllPending() {
+      const selectAll = document.getElementById('selectAllPending');
+      const checkboxes = document.querySelectorAll('.pending-checkbox');
+      
+      checkboxes.forEach(checkbox => {
+        checkbox.checked = selectAll.checked;
+      });
+    }
+
+    function getSelectedRequests(checkboxClass) {
+      const checkboxes = document.querySelectorAll(`.${checkboxClass}:checked`);
+      return Array.from(checkboxes).map(cb => cb.value);
+    }
+
+    function bulkApprove() {
+      const selectedIds = getSelectedRequests('request-checkbox');
+      if (selectedIds.length === 0) {
+        showMessage('Please select requests to approve.', 'warning');
+        return;
+      }
+      
+      if (confirm(`Are you sure you want to approve ${selectedIds.length} request(s)?`)) {
+        processBulkAction(selectedIds, 'Approved', 'Bulk approved by admin');
+      }
+    }
+
+    function bulkReject() {
+      const selectedIds = getSelectedRequests('request-checkbox');
+      if (selectedIds.length === 0) {
+        showMessage('Please select requests to reject.', 'warning');
+        return;
+      }
+      
+      const reason = prompt('Please provide a reason for rejection:');
+      if (reason && confirm(`Are you sure you want to reject ${selectedIds.length} request(s)?`)) {
+        processBulkAction(selectedIds, 'Rejected', reason);
+      }
+    }
+
+    function bulkInReview() {
+      const selectedIds = getSelectedRequests('request-checkbox');
+      if (selectedIds.length === 0) {
+        showMessage('Please select requests to mark as in review.', 'warning');
+        return;
+      }
+      
+      if (confirm(`Are you sure you want to mark ${selectedIds.length} request(s) as in review?`)) {
+        processBulkAction(selectedIds, 'In Review', 'Marked for review by admin');
+      }
+    }
+
+    function bulkApproveFromPending() {
+      const selectedIds = getSelectedRequests('pending-checkbox');
+      if (selectedIds.length === 0) {
+        showMessage('Please select requests to approve.', 'warning');
+        return;
+      }
+      
+      if (confirm(`Are you sure you want to approve ${selectedIds.length} request(s)?`)) {
+        processBulkAction(selectedIds, 'Approved', 'Bulk approved from pending review');
+      }
+    }
+
+    function bulkRejectFromPending() {
+      const selectedIds = getSelectedRequests('pending-checkbox');
+      if (selectedIds.length === 0) {
+        showMessage('Please select requests to reject.', 'warning');
+        return;
+      }
+      
+      const reason = prompt('Please provide a reason for rejection:');
+      if (reason && confirm(`Are you sure you want to reject ${selectedIds.length} request(s)?`)) {
+        processBulkAction(selectedIds, 'Rejected', reason);
+      }
+    }
+
+    function processBulkAction(requestIds, newStatus, reason) {
+      requestIds.forEach(id => {
+        const request = allRequests.find(r => r.id === id);
+        if (request) {
+          request.status = newStatus;
+          if (newStatus === 'Rejected') {
+            request.rejectionReason = reason;
+          } else if (newStatus === 'Approved') {
+            request.approvalDate = new Date().toISOString().split('T')[0];
+          }
+        }
+      });
+
+      // Update displays
+      updateStatsCards();
+      loadAllTabs();
+      
+      // Clear selections
+      document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+      
+      showMessage(`Successfully processed ${requestIds.length} request(s).`, 'success');
+    }
+
+    // === REQUEST DETAILS ===
+    function viewRequestDetails(requestId) {
+      const request = allRequests.find(r => r.id === requestId);
+      if (!request) return;
+
+      const content = `
+        <div class="request-details">
+          <div class="detail-group">
+            <h4>Basic Information</h4>
+            <p><strong>Request ID:</strong> ${request.id}</p>
+            <p><strong>Requester:</strong> ${request.requester} (${request.requesterSOEID})</p>
+            <p><strong>Date Needed:</strong> ${formatDate(request.dateNeeded)}</p>
+            <p><strong>Submit Date:</strong> ${formatDate(request.submitDate)}</p>
+            <p><strong>Status:</strong> <span class="status-badge status-${request.status.toLowerCase().replace(' ', '-')}">${request.status}</span></p>
+          </div>
+          
+          <div class="detail-group">
+            <h4>Position Details</h4>
+            <p><strong>Job Title:</strong> ${request.jobTitle}</p>
+            <p><strong>FTE Count:</strong> ${request.fteCount}</p>
+            <p><strong>Account:</strong> ${request.account}</p>
+            <p><strong>Location:</strong> ${request.location}</p>
+            <p><strong>Duration:</strong> ${request.duration}</p>
+            <p><strong>Internal/External:</strong> ${request.intExt}</p>
+          </div>
+          
+          <div class="detail-group">
+            <h4>Management</h4>
+            <p><strong>SMT:</strong> ${request.smt} (${request.smtSOEID})</p>
+            <p><strong>Manager Approval:</strong> ${request.managerApproval}</p>
+            <p><strong>Priority:</strong> <span class="status-badge status-${request.priority.toLowerCase()}">${request.priority}</span></p>
+            <p><strong>Budget Code:</strong> ${request.budgetCode}</p>
+          </div>
+          
+          <div class="detail-group">
+            <h4>Additional Information</h4>
+            <p><strong>Business Justification:</strong> ${request.businessJustification}</p>
+            <p><strong>Technical Skills:</strong> ${request.techSkills}</p>
+            <p><strong>Region:</strong> ${request.region}</p>
+            ${request.replacementFor ? `<p><strong>Replacement For:</strong> ${request.replacementFor}</p>` : ''}
+          </div>
+          
+          ${request.status === 'Approved' ? `
+          <div class="detail-group">
+            <h4>Approval Details</h4>
+            <p><strong>Approval Date:</strong> ${formatDate(request.approvalDate)}</p>
+            <p><strong>PIDs Status:</strong> <span class="status-badge status-${request.pidStatus.toLowerCase().replace(' ', '-')}">${request.pidStatus}</span></p>
+          </div>
+          ` : ''}
+          
+          ${request.status === 'Rejected' ? `
+          <div class="detail-group">
+            <h4>Rejection Details</h4>
+            <p><strong>Rejection Reason:</strong> ${request.rejectionReason}</p>
+          </div>
+          ` : ''}
+        </div>
+      `;
+
+      document.getElementById('requestDetailsContent').innerHTML = content;
+      document.getElementById('detailsModal').style.display = 'block';
+    }
+
+    function closeDetailsModal() {
+      document.getElementById('detailsModal').style.display = 'none';
+    }
+
+    // === ACTION MODAL ===
+    function openActionModal(requestId, action) {
+      currentRequestId = requestId;
+      const request = allRequests.find(r => r.id === requestId);
+      
+      document.getElementById('actionModalTitle').textContent = `Process Request ${requestId}`;
+      document.getElementById('actionType').value = action === 'View' ? '' : action;
+      document.getElementById('actionReason').value = '';
+      document.getElementById('actionMessage').innerHTML = '';
+      
+      toggleReasonField();
+      document.getElementById('actionModal').style.display = 'block';
+    }
+
+    function closeActionModal() {
+      document.getElementById('actionModal').style.display = 'none';
+      currentRequestId = null;
+    }
+
+    function toggleReasonField() {
+      const actionType = document.getElementById('actionType').value;
+      const reasonGroup = document.getElementById('reasonGroup');
+      const reasonField = document.getElementById('actionReason');
+      
+      if (actionType === 'Reject') {
+        reasonGroup.style.display = 'block';
+        reasonField.required = true;
+      } else {
+        reasonGroup.style.display = 'none';
+        reasonField.required = false;
+      }
+    }
+
+    function processAction(e) {
+      e.preventDefault();
+      
+      const actionType = document.getElementById('actionType').value;
+      const reason = document.getElementById('actionReason').value;
+      const loading = document.getElementById('actionLoading');
+      
+      if (!actionType) {
+        showActionMessage('Please select an action.', 'error');
+        return;
+      }
+
+      // Show loading
+      loading.style.display = 'inline-block';
+
+      // Simulate processing delay
+      setTimeout(() => {
+        const request = allRequests.find(r => r.id === currentRequestId);
+        if (request) {
+          request.status = actionType;
+          
+          if (actionType === 'Rejected') {
+            request.rejectionReason = reason;
+          } else if (actionType === 'Approved') {
+            request.approvalDate = new Date().toISOString().split('T')[0];
+          }
+
+          // Update displays
+          updateStatsCards();
+          loadAllTabs();
+          
+          loading.style.display = 'none';
+          showActionMessage(`Request ${currentRequestId} has been ${actionType.toLowerCase()}.`, 'success');
+          
+          // Close modal after delay
+          setTimeout(() => {
+            closeActionModal();
+          }, 2000);
+        }
+      }, 1000);
+    }
+
+    // === CHARTS ===
+    function initializeCharts() {
+      const ctx1 = document.getElementById('statusChart').getContext('2d');
+      const ctx2 = document.getElementById('accountChart').getContext('2d');
+      const ctx3 = document.getElementById('trendChart').getContext('2d');
+      const ctx4 = document.getElementById('priorityChart').getContext('2d');
+
+      charts.statusChart = new Chart(ctx1, {
+        type: 'doughnut',
+        data: {
+          labels: ['Pending', 'Approved', 'Rejected', 'In Review'],
+          datasets: [{
+            data: [0, 0, 0, 0],
+            backgroundColor: ['#fd7e14', '#28a745', '#dc3545', '#17a2b8'],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      });
+
+      charts.accountChart = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+          labels: [],
+          datasets: [{
+            label: 'Requests',
+            data: [],
+            backgroundColor: '#005aa7',
+            borderRadius: 5
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          }
+        }
+      });
+
+      charts.trendChart = new Chart(ctx3, {
+        type: 'line',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+          datasets: [{
+            label: 'Requests Submitted',
+            data: [12, 15, 18, 20, 25, 22, 28],
+            borderColor: '#005aa7',
+            backgroundColor:
+
+
